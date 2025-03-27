@@ -3,11 +3,13 @@ import NavLink from '@/components/TextLink.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps({
     contents: Object,
 });
+
+const form = useForm({});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,7 +23,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const removeContent = (content) => {
-    console.log(content);
+    if (!confirm('Deseja realmente apagar este conteúdo?')) return;
+
+    form.delete(route('media.contents.destroy', content));
 };
 </script>
 

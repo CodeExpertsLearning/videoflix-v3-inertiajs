@@ -7,6 +7,7 @@ use App\Http\Requests\ContentRequest;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ContentController extends Controller
 {
@@ -50,7 +51,7 @@ class ContentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return redirect()->route('media.contents.edit', ['content' => $id]);
     }
 
     /**
@@ -66,9 +67,22 @@ class ContentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ContentRequest $request, string $id)
     {
-        //
+        $data = $request->validated();
+
+        $content = $this->contentModel->findOrFail($id);
+
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            if ($content->cover)
+                Storage::disk('public')->delete($content->cover);
+
+            $data['cover'] = $data['photo']->store('media/contents', 'public');
+        }
+
+        $content->update($data);
+
+        return redirect()->back();
     }
 
     /**
@@ -76,6 +90,13 @@ class ContentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $content = $this->contentModel->findOrFail($id);
+
+        if ($content->cover)
+            Storage::disk('public')->delete($content->cover);
+
+        $content->delete();
+
+        return redirect()->back();
     }
 }

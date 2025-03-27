@@ -70,6 +70,7 @@ const mountFilesFront = (images) => {
         reader.readAsDataURL(image);
 
         reader.onload = (e) => {
+            console.log(e.target);
             filesFront.value.push(e.target?.result);
         };
     });
