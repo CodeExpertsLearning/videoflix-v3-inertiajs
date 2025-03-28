@@ -21,4 +21,25 @@ Route::prefix('media')->name('media.')->group(function () {
         \App\Http\Controllers\Media\ContentController::class
     )
         ->middleware('auth');
+
+    Route::get(
+        'contents/{content}/videos',
+        [\App\Http\Controllers\Media\VideoController::class, 'index']
+    )->name('content.videos.upload');
+
+    Route::post(
+        'contents/{content}/videos/store',
+        [\App\Http\Controllers\Media\VideoController::class, 'store']
+    )->name('contents.videos.store');
+
+
+    Route::post(
+        'contents/{content}/videos/{video}/process/chunck',
+        [\App\Http\Controllers\Media\VideoController::class, 'processChunk']
+    )->name('contents.videos.upload.chuncks');
+
+    Route::delete(
+        'contents/{content}/videos/{video}/destroy',
+        [\App\Http\Controllers\Media\VideoController::class, 'destroy']
+    )->name('contents.videos.destroy');
 });

@@ -13,6 +13,8 @@
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "pbmedia/laravel-ffmpeg": "^8.7",
+        "pion/laravel-chunk-upload": "^1.5",
         "spatie/laravel-sluggable": "*",
         "tightenco/ziggy": "^2.4"
     },
