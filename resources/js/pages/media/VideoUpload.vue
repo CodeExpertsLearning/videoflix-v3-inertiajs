@@ -9,7 +9,39 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { createUpload } from '@mux/upchunk';
 import axios from 'axios';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
+onMounted(() => {
+    Echo.channel('videos')
+        .listen('.App\\Events\\VideoThumbCreated', (e) => {
+            const video = getVideo(e.videoId);
+
+            if (!video) return;
+
+            video.thumb = e.thumb;
+        })
+        .listen('.App\\Events\\VideoEncodingStart', (e) => {
+            const video = getVideo(e.videoId);
+
+            if (!video) return;
+
+            video.encoding = true;
+        })
+        .listen('.App\\Events\\VideoEncodingFinished', (e) => {
+            const video = getVideo(e.videoId);
+
+            if (!video) return;
+
+            video.encoding = false;
+        })
+        .listen('.App\\Events\\VideoEncodingProgress', (e) => {
+            const video = getVideo(e.videoId);
+
+            if (!video) return;
+
+            video.encodingProgress = e.progress;
+        });
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

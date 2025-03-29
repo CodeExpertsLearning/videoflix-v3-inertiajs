@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\VideoThumbCreated;
 use App\Models\Video;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,6 +36,6 @@ class VideoCreateThumbJob implements ShouldQueue
             'thumb' => $thumb
         ]);
 
-        //To-DO: Propago o evento de thumb gerada via Broadcast pelo Reverb (Websocket)
+        event(new VideoThumbCreated($this->video));
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Events\VideoEncodingFinished;
+use App\Events\VideoEncodingProgress;
+use App\Events\VideoEncodingStart;
 use App\Models\Video;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,7 +27,7 @@ class VideoEncondingProcessJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //To-DO: Propagar inicio do encoding via broadcast por meio do Reverb(Websocket)
+        event(new VideoEncodingStart($this->video));
 
         $videoNewName =  str_replace(strrchr($this->video->video, '.'), '', $this->video->video) . '.m3u8';
 
@@ -39,7 +42,7 @@ class VideoEncondingProcessJob implements ShouldQueue
             ->addFormat($midBitrateFormat)
             ->addFormat($highBitrateFormat)
             ->onProgress(function ($progress) {
-                //TO-DO: Propagar este progresso via broadcast por meio do Reverb(Websocket)
+                event(new VideoEncodingProgress($this->video, $progress));
             })
             ->toDisk('videos_processed')
             ->save($this->video->code . '/' . $videoNewName);
@@ -51,6 +54,6 @@ class VideoEncondingProcessJob implements ShouldQueue
             'is_processed' => true
         ]);
 
-        //To-DO: Propagar conclusão encoding via broadcast por meio do Reverb(Websocket)
+        event(new VideoEncodingFinished($this->video));
     }
 }

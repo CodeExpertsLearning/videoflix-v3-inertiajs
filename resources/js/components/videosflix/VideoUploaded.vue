@@ -39,8 +39,8 @@ const emit = defineEmits();
 
                 <div class="flex items-center space-x-3" v-if="upload.uploading">
                     <!-- Disparar os eventos -->
-                    <button class="text-sm font-medium text-blue-500" @click="emit('pause', upload.id)" v-if="!upload.file.pause">Pausar</button>
-                    <button class="text-sm font-medium text-blue-500" @click="emit('resume', upload.id)" v-if="upload.file.pause">Continuar</button>
+                    <button class="text-sm font-medium text-blue-500" @click="emit('pause', upload.id)" v-if="!upload.file.paused">Pausar</button>
+                    <button class="text-sm font-medium text-blue-500" @click="emit('resume', upload.id)" v-if="upload.file.paused">Continuar</button>
                     <button class="text-sm font-medium text-blue-500" @click="emit('cancel', upload.id)">Cancelar</button>
                 </div>
             </div>
