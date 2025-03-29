@@ -1,10 +1,32 @@
 <script setup>
+import InputError from '@/components/InputError.vue';
+import PrimaryButton from '@/components/ui/button/Button.vue';
+import Input from '@/components/ui/input/Input.vue';
+import InputLabel from '@/components/ui/label/Label.vue';
+
+import { useForm } from '@inertiajs/vue3';
+
 const props = defineProps({
     upload: Object,
     content: Number,
 });
 
 const emit = defineEmits();
+
+const form = useForm({
+    name: props.upload.name,
+    description: null,
+});
+
+const updateVideo = () => {
+    form.patch(
+        route('media.contents.videos.update', {
+            content: props.content,
+            video: props.upload.id,
+        }),
+        { preserveScroll: true, preserveState: true },
+    );
+};
 </script>
 <template>
     <div class="p-6 text-gray-900">
@@ -44,6 +66,44 @@ const emit = defineEmits();
                     <button class="text-sm font-medium text-blue-500" @click="emit('cancel', upload.id)">Cancelar</button>
                 </div>
             </div>
+
+            <form @submit.prevent="updateVideo" class="flex-grow space-y-6">
+                <div>
+                    <InputLabel for="title" class="text-white">Nome Vídeo</InputLabel>
+
+                    <Input id="title" type="text" v-model="form.name" required autofocus class="text-white" />
+
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
+
+                <div class="mt-4">
+                    <InputLabel for="description" class="text-white">Descrição</InputLabel>
+
+                    <Input
+                        id="description"
+                        type="text"
+                        class="mt-1 block w-full p-2 text-white"
+                        v-model="form.description"
+                        required
+                        autofocus
+                        autocomplete=""
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.description" />
+                </div>
+
+                <div class="mt-8">
+                    <PrimaryButton
+                        :class="{
+                            'opacity-25': form.processing,
+                        }"
+                        :disabled="form.processing"
+                    >
+                        Atualizar
+                    </PrimaryButton>
+                    <span class="font-thin text-white" v-if="form.recentlySuccessful">Atualizado...</span>
+                </div>
+            </form>
         </div>
     </div>
 </template>

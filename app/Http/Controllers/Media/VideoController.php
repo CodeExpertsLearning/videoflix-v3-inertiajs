@@ -32,6 +32,26 @@ class VideoController extends Controller
         return $video;
     }
 
+    public function update(Content $content, $video, Request $request)
+    {
+        $video = $content->videos()->findOrFail($video);
+
+        $video->update([
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function destroy(Content $content, $video)
+    {
+        $video = $content->videos()->findOrFail($video);
+        $video->delete();
+
+        return redirect()->back();
+    }
+
     public function processChunk(Content $content, string $video, Request $request)
     {
         $receiver = new FileReceiver(
@@ -56,13 +76,5 @@ class VideoController extends Controller
         }
 
         $save->handler();
-    }
-
-    public function destroy(Content $content, $video)
-    {
-        $video = $content->videos()->findOrFail($video);
-        $video->delete();
-
-        return redirect()->back();
     }
 }

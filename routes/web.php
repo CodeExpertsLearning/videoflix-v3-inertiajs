@@ -60,6 +60,12 @@ Route::prefix('media')->name('media.')->group(function () {
         [\App\Http\Controllers\Media\VideoController::class, 'processChunk']
     )->name('contents.videos.upload.chuncks');
 
+    Route::match(
+        ['PUT', 'PATCH'],
+        'contents/{content}/videos/{video}/update',
+        [\App\Http\Controllers\Media\VideoController::class, 'update']
+    )->name('contents.videos.update');
+
     Route::delete(
         'contents/{content}/videos/{video}/destroy',
         [\App\Http\Controllers\Media\VideoController::class, 'destroy']
