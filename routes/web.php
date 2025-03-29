@@ -14,6 +14,28 @@ Route::get('dashboard', function () {
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 
+
+Route::get('my-contents', [\App\Http\Controllers\MyContent::class, 'index'])
+    ->middleware(['auth'])
+    ->name('my-content');
+
+Route::get('watch/{content:slug}', [\App\Http\Controllers\MyContent::class, 'single'])
+    ->name('watch.video')->middleware(['auth']);
+
+Route::get('resource/{code}/{video}', function ($code, $video) {
+    $video = $code . '/' . $video;
+
+    return \Illuminate\Support\Facades\Storage::disk('videos_processed')
+        ->response(
+            $video,
+            null,
+            [
+                'Content-Type' => 'application/x-mpegURL',
+                'isHls' => true
+            ]
+        );
+})->name('stream.player')->middleware(['auth']);
+
 Route::prefix('media')->name('media.')->group(function () {
 
     Route::resource(

@@ -139,8 +139,8 @@ const cancelUpload = (videoId) => {
     <Head title="Upload de Vídeos" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <div class="mb-10 w-full">
+        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl">
+            <div class="mx-auto mb-2 mt-10 w-[80%]">
                 <InputLabel
                     @dragover.prevent="isDragged = true"
                     @dragleave.prevent="isDragged = false"
@@ -157,17 +157,17 @@ const cancelUpload = (videoId) => {
 
                 <InputError class="mt-2" :message="`Teste`" @change="handleTargetVideos" />
             </div>
-        </div>
-        <div>
-            <VideoUploaded
-                v-for="upload of uploads"
-                :key="upload.id"
-                :upload="upload"
-                :content="content.id"
-                @cancel="cancelUpload"
-                @resume="resumeUpload"
-                @pause="pauseUpload"
-            />
+            <div>
+                <VideoUploaded
+                    v-for="upload of uploads"
+                    :key="upload.id"
+                    :upload="upload"
+                    :content="content.id"
+                    @cancel="cancelUpload"
+                    @resume="resumeUpload"
+                    @pause="pauseUpload"
+                />
+            </div>
         </div>
     </AppLayout>
 </template>
