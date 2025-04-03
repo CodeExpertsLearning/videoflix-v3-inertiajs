@@ -16,11 +16,18 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('my-contents', [\App\Http\Controllers\MyContent::class, 'index'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'check.user.subscribed'])
     ->name('my-content');
 
 Route::get('watch/{content:slug}', [\App\Http\Controllers\MyContent::class, 'single'])
     ->name('watch.video')->middleware(['auth']);
+
+Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'checkout'])
+    ->middleware('auth')
+    ->name('checkout');
+Route::post('/checkout/charge', [\App\Http\Controllers\CheckoutController::class, 'charge'])
+    ->middleware('auth')
+    ->name('checkout.charge');
 
 Route::get('resource/{code}/{video}', function ($code, $video) {
     $video = $code . '/' . $video;
